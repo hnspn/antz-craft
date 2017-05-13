@@ -1,0 +1,15 @@
+à faire:
+
+	-Sélection rectangle
+	-IA autre équipe
+	-Améliorations/technologies
+	-Utiliser ressources pour création unités
+	-File de création d'unités
+	-Minimap
+	-(FoW)
+	-Lier menu avec autres scènes
+	-Musique
+	-Animations
+	-(traverser lac/tuyau)
+	-(Événements aléatoires)
+	

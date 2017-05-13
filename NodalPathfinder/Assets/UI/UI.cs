@@ -11,7 +11,8 @@ public class UI : MonoBehaviour {
     }
 
     public void showUpgrades() {
-            SceneManager.LoadScene("Upgrades", LoadSceneMode.Additive);
+        UnityEngine.Debug.Log("Button Click");
+        SceneManager.LoadScene("Upgrades", LoadSceneMode.Additive);
 
 
     }
