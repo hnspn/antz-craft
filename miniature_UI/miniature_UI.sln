@@ -1,12 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2015
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "miniature_UI.CSharp", "miniature_UI.CSharp.csproj", "{EB669890-7E7A-4352-4404-B32FE5CEC720}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EB669890-7E7A-4352-4404-B32FE5CEC720}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB669890-7E7A-4352-4404-B32FE5CEC720}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB669890-7E7A-4352-4404-B32FE5CEC720}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB669890-7E7A-4352-4404-B32FE5CEC720}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
