@@ -14,9 +14,18 @@ public class Fourmilliere : MonoBehaviour {
     public GameObject ScoutPrefab;
     public GameObject OuvrierePrefab;
     public GameObject SoldatPrefab;
+    public GameObject food, scrap, science;
 
-    GameObject selectedStuff = null;
-    public int foodStored = 0;
+
+    public float foodStored = 0;
+    public float scrapStored = 0;
+    public float sciencePoints = 0;
+    public int workerFoodCost;
+    public int workerScrapCost;
+    public int scoutFoodCost;
+    public int scoutScrapCost;
+    public int soldierFoodCost;
+    public int soldierScrapCost;
 
     // Use this for initialization
     void Start () {
@@ -27,43 +36,72 @@ public class Fourmilliere : MonoBehaviour {
 	void Update () {
         if (Input.GetKeyDown("q"))
         {
-            GameObject ant = CreateOuvriere();
-            ant.SetActive(true);
+            UnityEngine.Debug.Log(foodStored);
+            if (foodStored >= workerFoodCost && scrapStored >= workerScrapCost) {
+                GameObject ant = CreateOuvriere();
+                ant.SetActive(true);
+                foodStored -= workerFoodCost;
+                scrapStored -= workerScrapCost;
+            }
         }
         if (Input.GetKeyDown("w"))
         {
-            GameObject ant = CreateScout();
-            ant.SetActive(true);
+            if (foodStored >= scoutFoodCost && scrapStored >= scoutScrapCost) {
+                GameObject ant = CreateScout();
+                ant.SetActive(true);
+                foodStored -= scoutFoodCost;
+                scrapStored -= scoutScrapCost;
+            }
         }
         if (Input.GetKeyDown("e"))
         {
-            GameObject ant = CreateSoldat();
-            ant.SetActive(true);
+            if (foodStored >= soldierFoodCost && scrapStored >= soldierScrapCost) {
+                GameObject ant = CreateSoldat();
+                ant.SetActive(true);
+                foodStored -= soldierFoodCost;
+                scrapStored -= soldierScrapCost;
+            }
+
         }
 
-        
+        /*
         if (Input.GetMouseButtonDown(0)) {
             print("adsad");
             selectedStuff = Selectioning();
-        }
-        
-        if (Input.GetMouseButtonDown(1)&&selectedStuff != null)
-        {
-            print("click droit");
-            GameObject newDest = Selectioning();
-            Collider2D col = (selectedStuff.GetComponent<Collider2D>());
-            if (col.CompareTag("Unit")) {
-                selectedStuff.GetComponent<Ant>().setTarget(newDest);
-                selectedStuff.GetComponent<Ant>().idle = false;
-                if (newDest == null) {
-                    selectedStuff.GetComponent<Ant>().setPath(Camera.main.ScreenToWorldPoint(Input.mousePosition));
-                } else {
-                    if (newDest.CompareTag("Food"))
-                        selectedStuff.GetComponent<Ouvriere>().bouffe = newDest;
+        }*/
+        List<Ant> selectedObjects = RectangleSelection.selectedObjects;
+        if (selectedObjects != null) {
+            float i = 0;
+            foreach (Ant unit in selectedObjects) {
+                if (Input.GetMouseButtonDown(1) && unit != null) {
+                    print("click droit");
+                    GameObject newDest = Selectioning();
+                    Collider2D col = (unit.GetComponent<Collider2D>());
+                    if (col.CompareTag("Unit")) {
+                        unit.GetComponent<Ant>().setTarget(newDest);
+                        unit.GetComponent<Ant>().idle = false;
+                        if (newDest == null) {
+                            unit.GetComponent<Ant>().setPath((Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition)
+                                + new Vector2(
+                                    i % (selectedObjects.ToArray().Length / 4.0f) - (selectedObjects.ToArray().Length / 4.0f),
+                                    i - selectedObjects.ToArray().Length / 2.0f)
+                                    );
+                        } else {
+                            if (newDest.CompareTag("Food"))
+                                unit.GetComponent<Ouvriere>().bouffe = newDest;
+                        }
+                    }
                 }
+                i++;
             }
         }
+        foodStored += 10 * Time.deltaTime;
+        scrapStored += 5 * Time.deltaTime;
+        sciencePoints += 1 * Time.deltaTime;
 
+        food.GetComponent<UnityEngine.UI.Text>().text = "" + foodStored.ToString("N0");
+        scrap.GetComponent<UnityEngine.UI.Text>().text = "" + scrapStored.ToString("N0");
+        science.GetComponent<UnityEngine.UI.Text>().text = "" + sciencePoints.ToString("N0");
     }
 
     public GameObject CreateSoldat() {

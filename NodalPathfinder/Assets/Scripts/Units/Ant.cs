@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Ant : MonoBehaviour {
-
+    public Sprite[] sprites;
+    public GameObject selectionCircle;
 
     public GameObject destination;
     public float speed;
@@ -18,9 +19,10 @@ public class Ant : MonoBehaviour {
 
     private static Grid grid;
     private GameObject target;
-
+    private int counter = 0, spr = 0;
     // Use this for initialization
     public void Start () {
+        this.GetComponent<SpriteRenderer>().sprite = sprites[0];
         grid = GameObject.Find("Grid").GetComponent<Grid>();
         this.transform.position = fourmilliere.transform.position+ new Vector3(UnityEngine.Random.Range(-0.5f,0.5f), UnityEngine.Random.Range(-0.5f, 0.5f),0f);
         idle = true;
@@ -102,6 +104,7 @@ public class Ant : MonoBehaviour {
 
 
     void Move(Vector2 destination) {
+        animate();
         Vector2 currentPosition = this.transform.position;
         Vector3 direction = (destination - currentPosition).normalized;
         this.transform.position = Time.deltaTime * speed * direction + this.transform.position;
@@ -115,7 +118,13 @@ public class Ant : MonoBehaviour {
 
     }
 
-
+    void animate() {
+        counter++;
+        if(counter % 3 == 0) {
+            this.GetComponent<SpriteRenderer>().sprite = sprites[spr++];
+            spr %= sprites.Length;
+        }
+    }
 
 
 
