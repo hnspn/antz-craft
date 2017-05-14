@@ -42,9 +42,11 @@ public class Cameroscrolling : MonoBehaviour {
 
         var d = Input.GetAxis("Mouse ScrollWheel");
         if (d > 0f) {
-            this.GetComponent<Camera>().orthographicSize /= 1.1f;
+            if(this.GetComponent<Camera>().orthographicSize > 8)
+                this.GetComponent<Camera>().orthographicSize /= 1.1f;
         } else if (d < 0f) {
-            this.GetComponent<Camera>().orthographicSize *= 1.1f;
+            if (this.GetComponent<Camera>().orthographicSize < 40)
+                this.GetComponent<Camera>().orthographicSize *= 1.1f;
         }
     }
 }

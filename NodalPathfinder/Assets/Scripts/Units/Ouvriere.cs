@@ -7,8 +7,10 @@ public class Ouvriere : Ant {
 
     public int strength;
     public int foodCarried;
-    public GameObject bouffe;
-    
+    public int scrapCarried;
+    public GameObject Ressource;
+    public string task;
+
     // Use this for initialization
     new void Start()
     {
@@ -21,55 +23,51 @@ public class Ouvriere : Ant {
         base.Update();
     }
 
-    void OnTriggerEnter2D(Collider2D other)
-    {
-        print("trigger triggered !!!!!!!!!!!!");
-        if (other.gameObject.CompareTag("bouffe"))
-        {
-            TakeFood(other.gameObject);
-            setTarget(fourmilliere);
+    void OnTriggerEnter2D(Collider2D other) {
+        if (other.gameObject.CompareTag("Food") || other.gameObject.CompareTag("Scrap")) {
+            //print("trigger triggered ressourcde !!!!!!!!!!!!");
+            TakeRessource(other.gameObject);
+            setPath(fourmiliere.transform.position);
         }
 
-        if (other.gameObject.CompareTag("home"))
-        {
-            DropFood(other.gameObject);
-            if (this.bouffe != null)
-                setTarget(bouffe);
+        else if (other.gameObject.CompareTag("Home")) {
+            //print("trigger triggered home !!!!!!!!!!!!");
+            if (this.Ressource != null)
+                setPath(Ressource.transform.position);
             else
                 idle = true;
-                
+            DropRessources(other.gameObject);
+
         }
 
 
 
     }
 
-    private void DropFood(GameObject gameObject)
-    {
-        this.fourmilliere.GetComponent<Fourmilliere>().foodStored += foodCarried;
+    private void DropRessources(GameObject gameObject) {
+        this.fourmiliere.GetComponent<Fourmiliere>().foodStored += foodCarried;
+        this.fourmiliere.GetComponent<Fourmiliere>().scrapStored += scrapCarried;
         foodCarried = 0;
+        scrapCarried = 0;
     }
 
-    void TakeFood(GameObject food)
-    {
-        int foodQuantity = food.GetComponent<bouffe>().quantiteDeNourriture;
-        print(foodQuantity);
-        if (foodQuantity >= strength)
-        {
-            print("case1");
-            food.GetComponent<bouffe>().quantiteDeNourriture -= strength;
-            foodCarried = strength;
-        } else if (foodQuantity > 0)
-        {
-            print("case2");
-            foodCarried = foodQuantity;
-            food.GetComponent<bouffe>().quantiteDeNourriture = 0;
+    void TakeRessource(GameObject food) {
+        if (foodCarried == 0) {
+            int foodQuantity = food.GetComponent<Ressource>().quantiteDeRessource;
+            //print(foodQuantity);
+            if (foodQuantity >= strength) {
+                //print("case1");
+                food.GetComponent<Ressource>().quantiteDeRessource -= strength;
+                foodCarried = strength;
+            } else if (foodQuantity > 0) {
+                //print("case2");
+                foodCarried = foodQuantity;
+                food.GetComponent<Ressource>().quantiteDeRessource = 0;
+            }
+            if (food.GetComponent<Ressource>().quantiteDeRessource <= 0)
+                this.Ressource = null;
+            this.setPath(this.fourmiliere.transform.position);
         }
-        if (food.GetComponent<bouffe>().quantiteDeNourriture <= 0)
-            this.bouffe = null;
-        this.setTarget(this.fourmilliere);
-
 
     }
-
 }

@@ -4,56 +4,62 @@ using UnityEngine;
 
 public class Soldat : Ant {
 
-    public float attack;
+    public int attack;
 
     // Use this for initialization
-    new void Start()
-    {
+    new void Start() {
         base.Start();
 
     }
 
+
+
     // Update is called once per frame
-    new void Update()
-    {
+    new void Update() {
+        if (this.health <= 0)
+            fourmiliere.GetComponent<Fourmiliere>().listSoldat.Remove(this.gameObject);
         base.Update();
     }
 
-    void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.gameObject.CompareTag("scout") || other.gameObject.CompareTag("soldat") || other.gameObject.CompareTag("ouvriere"))
-        {
-            print("allo");
-            if (other.gameObject.GetComponent<Ant>().team != this.team)
-            {
-
-                print("a lassaut !!!!!!!!!!!!");
-                Attack(other.gameObject);
-            }
-            
-        }
+    void OnTriggerEnter2D(Collider2D other) {
+        print("trigger atk collifder");
+        LaunchAttack(other.gameObject);
     }
 
-
-    void OnTriggerStay2D(Collider2D other)
-    {
-        if (other.gameObject.CompareTag("scout") || other.gameObject.CompareTag("soldat") || other.gameObject.CompareTag("ouvriere"))
-        {
-            print("allo");
-            if (other.gameObject.GetComponent<Ant>().team != this.team)
-            {
+    void LaunchAttack(GameObject target) {
+        if (target == null) throw new System.Exception("does not work, target is null");
+        if (target.CompareTag("Unit")) {
+            if (target.GetComponent<Ant>().team != this.team) {
 
                 print("a lassaut !!!!!!!!!!!!");
-                Attack(other.gameObject);
+                Attack(target, false);
             }
 
+        } else if (target.CompareTag("Home")) {
+            print("atk home");
+            if (target.GetComponent<FourmiliereEnnemie>().team != this.team) {
+
+
+                Attack(target, true);
+            }
         }
+
     }
 
-    public void Attack(GameObject enemy)
-    {
+    void OnTriggerStay2D(Collider2D other) {
+        LaunchAttack(other.gameObject);
+    }
+
+    public void Attack(GameObject enemy, bool isBase) {
         this.setTarget(enemy);
-        enemy.GetComponent<Ant>().health -= this.attack;
+        if (isBase) {
+            print("a lassaut de la base !! hp = " + enemy.GetComponent<FourmiliereEnnemie>().health);
+            enemy.GetComponent<FourmiliereEnnemie>().health -= this.attack;
+        } else {
+            enemy.GetComponent<Ant>().health -= this.attack;
+            print("a lassaut de lenemy !! hp = " + enemy.GetComponent<Ant>().health);
+        }
+
     }
 
 

@@ -30,13 +30,13 @@ public class Grid : MonoBehaviour {
 
 	public const float UnitSize = 1f;
 
-	private LineRenderer LineRenderer;
-	GameObject Player;
+	//private LineRenderer LineRenderer;
+	//GameObject Player;
 
 	void Awake () 
 	{	
-		Player = GameObject.Find ("Player");
-		LineRenderer = transform.GetComponent<LineRenderer>();
+		//Player = GameObject.Find ("Player");
+		//LineRenderer = transform.GetComponent<LineRenderer>();
 
 		//Get grid dimensions
 		Offset = this.transform.position;

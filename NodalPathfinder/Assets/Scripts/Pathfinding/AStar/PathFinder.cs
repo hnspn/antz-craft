@@ -12,6 +12,12 @@ public static class PathFinder
             int index = 0;
             while (bc != null)
             {
+                if (temp.Length <= index) {
+                    BreadCrumb[] temp2 = new BreadCrumb[temp.Length * 2];
+                    for (int i = 0; i < temp.Length; i++)
+                        temp2[i] = temp[i];
+                    temp = temp2;
+                }
                 temp[index] = bc;
                 bc = bc.next;
                 index++;
