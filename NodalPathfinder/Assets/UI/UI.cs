@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine.SceneManagement;
 
 public class UI : MonoBehaviour {
-    public Fourmilliere fourmilliere;
+    public FourmiliereAlliee fourmiliere;
     public Sprite[] sprites;
     public GameObject image,hp, upgrades, settings;
     private bool upgradesOn = false, settingsOn = false, errorMessage;
@@ -38,21 +38,19 @@ public class UI : MonoBehaviour {
     public void createUnit(string unitType) {
         switch (unitType) {
             case "worker": {
-                    fourmilliere.CreateOuvriere();
-                        
+                    fourmiliere.CreateOuvriere();
                 }break;
             case "scout": {
-                    fourmilliere.CreateScout();
+                    fourmiliere.CreateScout();
                 }break;
             case "soldier": {
-                    fourmilliere.CreateSoldat();
+                    fourmiliere.CreateSoldat();
                 }break;
             default:break;
         }
     }
 
     public void Update() {
-
         if (RectangleSelection.selectedObjects != null && RectangleSelection.selectedObjects.Count >= 1) {
             Ant ant = RectangleSelection.selectedObjects[0];
             string name = ant.name;

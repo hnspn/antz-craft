@@ -5,6 +5,9 @@ using UnityEngine;
 public class FourmiliereAlliee : Fourmiliere {
     public GameObject food, scrap, science;
     public int unitCreateTime;
+    public GameObject progressBar;
+    public GameObject[] qUnits;
+    public Sprite[] sprites;
 
     private Queue<GameObject> q = new Queue<GameObject>();
     private float queueTimer = 0;
@@ -16,9 +19,18 @@ public class FourmiliereAlliee : Fourmiliere {
 	
 	// Update is called once per frame
 	new void Update () {
+        GameObject[] qTemp = q.ToArray();
+        for (int i = 0; i < q.Count; i++) {
+            qUnits[i].GetComponent<UnityEngine.UI.Image>().sprite = sprites[qTemp[i].GetComponent<Ant>().type];
+        }
+        for (int i = q.Count; i < 5; i++) {
+            qUnits[i].GetComponent<UnityEngine.UI.Image>().sprite = sprites[3];
+        }
         if (q.Count > 0) {
+            progressBar.GetComponent<Progress>().progress = queueTimer/(float)unitCreateTime;
             if (queueTimer <= 0) {
                 queueTimer = unitCreateTime;
+                progressBar.GetComponent<Progress>().progress = 1;
                 GameObject ant = Instantiate(q.Dequeue());
                 switch (ant.GetComponent<Ant>().type) {
                     case 0: {
@@ -56,19 +68,33 @@ public class FourmiliereAlliee : Fourmiliere {
             queueTimer -= Time.deltaTime;
 
         if (Input.GetKeyDown("q")) {
-            foodStored += workerFoodCost;
-            scrapStored += workerScrapCost;
-            CreateOuvriere();
+            GameObject ant = Instantiate(OuvrierePrefab);
+            listOuvriere.Add(ant);
+            ant.SetActive(true);
+            ant.GetComponent<Ant>().team = this.team;
+            ant.GetComponent<Ant>().health = workerMaxHealth;
+            ant.GetComponent<Ant>().speed = workerSpeed;
+            ant.GetComponent<Ouvriere>().strength = workerStrength;
+
+
+
         }
         if (Input.GetKeyDown("w")) {
-            foodStored += scoutFoodCost;
-            scrapStored += scoutScrapCost;
-            CreateScout();
+            GameObject ant = Instantiate(ScoutPrefab);
+            listScout.Add(ant);
+            ant.SetActive(true);
+            ant.GetComponent<Ant>().team = this.team;
+            ant.GetComponent<Ant>().health = scoutMaxHealth;
+            ant.GetComponent<Ant>().speed = scoutSpeed;
         }
         if (Input.GetKeyDown("e")) {
-            foodStored += soldierFoodCost;
-            scrapStored += soldierScrapCost;
-            CreateSoldat();
+            GameObject ant = Instantiate(SoldatPrefab);
+            listSoldat.Add(ant);
+            ant.SetActive(true);
+            ant.GetComponent<Ant>().team = this.team;
+            ant.GetComponent<Ant>().health = soldierMaxHealth;
+            ant.GetComponent<Ant>().speed = soldierSpeed;
+            ant.GetComponent<Soldat>().attack = soldierAttack;
         }
 
         /*
@@ -78,6 +104,12 @@ public class FourmiliereAlliee : Fourmiliere {
         }*/
         List<Ant> selectedObjects = RectangleSelection.selectedObjects;
         if (selectedObjects != null) {
+            if (Input.GetKeyDown(KeyCode.Delete)) {
+                foreach(Ant ant in selectedObjects) {
+                    ant.health = 0;
+                }
+                selectedObjects = new List<Ant>();
+            }
             float i = 0;
             foreach (Ant unit in selectedObjects) {
                 if (Input.GetMouseButtonDown(1) && unit != null) {
@@ -115,18 +147,21 @@ public class FourmiliereAlliee : Fourmiliere {
 	}
 
     public new bool CreateSoldat() {
-        if (foodStored >= soldierFoodCost && scrapStored >= soldierScrapCost) {
+        if (foodStored >= soldierFoodCost && scrapStored >= soldierScrapCost && q.Count < 5) {
+            if(q.Count==0)
+                queueTimer = unitCreateTime;
             q.Enqueue(SoldatPrefab);
             foodStored -= soldierFoodCost;
             scrapStored -= soldierScrapCost;
-
             return true;
         }
         return false;
     }
 
     public new bool CreateScout() {
-        if (foodStored >= scoutFoodCost && scrapStored >= scoutScrapCost) {
+        if (foodStored >= scoutFoodCost && scrapStored >= scoutScrapCost && q.Count < 5) {
+            if (q.Count == 0)
+                queueTimer = unitCreateTime;
             q.Enqueue(ScoutPrefab);
             foodStored -= scoutFoodCost;
             scrapStored -= scoutScrapCost;
@@ -137,7 +172,9 @@ public class FourmiliereAlliee : Fourmiliere {
     }
 
     public new bool CreateOuvriere() {
-        if (foodStored >= workerFoodCost && scrapStored >= workerScrapCost) {
+        if (foodStored >= workerFoodCost && scrapStored >= workerScrapCost && q.Count < 5) {
+            if (q.Count == 0)
+                queueTimer = unitCreateTime;
             q.Enqueue(OuvrierePrefab);
             foodStored -= workerFoodCost;
             scrapStored -= workerScrapCost;

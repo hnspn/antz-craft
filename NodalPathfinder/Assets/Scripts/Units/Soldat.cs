@@ -37,7 +37,7 @@ public class Soldat : Ant {
 
         } else if (target.CompareTag("Home")) {
             print("atk home");
-            if (target.GetComponent<FourmiliereEnnemie>().team != this.team) {
+            if (target.GetComponent<Fourmiliere>().team != this.team) {
 
 
                 Attack(target, true);
